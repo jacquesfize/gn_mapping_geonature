@@ -37,8 +37,8 @@ def upgrade():
         sa.Column("nom_type", sa.String, nullable=False),
         schema=schema,
     )
-    op.execute(
-        sa.insert(sa.table(BibTypeOrganism)),
+    op.bulk_insert(
+        BibTypeOrganism.__table__,
         [
             {"id_type": 1, "nom_type": "Parc National"},
             {"id_type": 2, "nom_type": "Parc Régional"},
@@ -65,6 +65,7 @@ def upgrade():
         sa.Column("adresse", sa.String, nullable=False),
         sa.Column(
             "id_type",
+            sa.Integer,
             sa.ForeignKey("gn_mapping_geonature.bib_type_organism.id_type"),
             nullable=False,
         ),
@@ -73,7 +74,6 @@ def upgrade():
         sa.Column("geometry", Geometry, nullable=False),
         schema=schema,
     )
-    op.execute(operations)
 
 
 def downgrade():

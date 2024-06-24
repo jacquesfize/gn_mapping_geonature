@@ -5,6 +5,7 @@ Revises: 4662728829
 Create Date: 2024-06-24
 
 """
+
 from alembic import op
 import sqlalchemy as sa
 
@@ -55,12 +56,11 @@ def upgrade():
         FROM
             (
                 VALUES
-                    ('MAPPING_GEONATURE', 'MAPPING_GEONATURE', 'C', True, 'Créer des données'),
-                    ('MAPPING_GEONATURE', 'MAPPING_GEONATURE', 'R', True, 'Voir des données'),
-                    ('MAPPING_GEONATURE', 'MAPPING_GEONATURE', 'U', True, 'Modifier les données'),
-                    ('MAPPING_GEONATURE', 'MAPPING_GEONATURE', 'V', True, 'Valider des données'),
-                    ('MAPPING_GEONATURE', 'MAPPING_GEONATURE', 'E', True, 'Exporter des données'),
-                    ('MAPPING_GEONATURE', 'MAPPING_GEONATURE', 'D', True, 'Supprimer des données')
+                    ('MAPPING_GEONATURE', 'ALL', 'C', True, 'Créer un organisme'),
+                    ('MAPPING_GEONATURE', 'ALL', 'R', True, 'Voir des organismes'),
+                    ('MAPPING_GEONATURE', 'ALL', 'U', True, 'Modifier des organismes'),
+                    ('MAPPING_GEONATURE', 'ALL', 'E', True, 'Exporter des organismes'),
+                    ('MAPPING_GEONATURE', 'ALL', 'D', True, 'Supprimer des organismes')
             ) AS v (module_code, object_code, action_code, scope_filter, label)
         JOIN
             gn_commons.t_modules m ON m.module_code = v.module_code

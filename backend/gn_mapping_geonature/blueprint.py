@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, request
 
 from utils_flask_sqla.response import json_resp
 from geonature.utils.env import DB
@@ -6,7 +6,7 @@ from geonature.utils.env import DB
 # import des fonctions utiles depuis le sous-module d'authentification
 from geonature.core.gn_permissions import decorators as permissions
 from geonature.core.gn_permissions.tools import _get_user_permissions
-from .models import MyModel
+from .models import BibTypeOrganism, Organism
 
 blueprint = Blueprint(
     "mapping_geonature", __name__
@@ -14,26 +14,50 @@ blueprint = Blueprint(
 
 
 # Exemple d'une route simple
-@blueprint.route("/test", methods=["GET"])
-@json_resp
-def get_view():
-    q = DB.session.query(MyModel)
+
+
+@blueprint.route("/organisms/<int:id_organism>", methods=["GET"])
+def get_organism():
+    q = DB.session.query(Organism).filter_by(id_organism=id_organism)
+    data = q.first()
+    return data.as_dict()
+
+
+@blueprint.route("/organisms", methods=["GET"])
+def get_organisms():
+    q = DB.session.query(Organism)
     data = q.all()
     return [d.as_dict() for d in data]
 
 
-# Exemple d'une route protégée le CRUVED du sous module d'authentification
-@blueprint.route("/test_cruved", methods=["GET"])
-@permissions.check_cruved_scope("R", module_code="MAPPING_GEONATURE")
-@json_resp
-def get_sensitive_view(info_role):
-    # Récupérer l'id de l'utilisateur qui demande la route
-    id_role = info_role.id_role
-    # Récupérer la portée autorisée à l'utilisateur pour l'acton 'R' (read)
-    read_scope = info_role.value_filter
-
-    # récupérer le CRUVED complet de l'utilisateur courant
-    user_cruved = _get_user_permissions(id_role=info_role.id_role)
-    q = DB.session.query(MyModel)
+@blueprint.route("/type_organism", methods=["GET"])
+def get_type_organism():
+    q = DB.session.query(BibTypeOrganism)
     data = q.all()
     return [d.as_dict() for d in data]
+
+
+@blueprint.route("/organism", methods=["POST"])
+def create_organism():
+    data = request.get_json()
+    new_organism = Organism(**data)
+    DB.session.add(new_organism)
+    DB.session.commit()
+    return new_organism
+
+
+@blueprint.route("/organism/<int:id_organism>", methods=["PUT"])
+def update_organism(id_organism):
+    data = request.get_json()
+    q = DB.session.query(Organism).filter_by(id_organism=id_organism)
+    q.update(data)
+    DB.session.commit()
+    return "OK"
+
+
+@blueprint.route("/organism/<int:id_organism>", methods=["DELETE"])
+def delete_organism(id_organism):
+    q = DB.session.query(Organism).filter_by(id_organism=id_organism)
+    q.delete()
+    DB.session.commit()
+    return "OK"
