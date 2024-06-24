@@ -37,7 +37,11 @@ class Organism(DB.Model):
         sa.ForeignKey("gn_mapping_geonature.bib_type_organism.id_type"),
         nullable=False,
     )
+    type_ = DB.relationship("BibTypeOrganism")
 
     description = db.Column(sa.String, nullable=False)
     url = db.Column(sa.String, nullable=False)
     geometry = db.Column(Geometry, nullable=False)
+
+    def has_instance_permission(self, scope):
+        return True

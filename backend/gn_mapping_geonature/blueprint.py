@@ -3,6 +3,7 @@ from werkzeug.exceptions import BadRequest
 from utils_flask_sqla.response import json_resp
 from geonature.utils.env import DB, db
 import sqlalchemy as sa
+from sqlalchemy.orm import joinedload
 
 # import des fonctions utiles depuis le sous-module d'authentification
 from geonature.core.gn_permissions import decorators as permissions
@@ -20,21 +21,28 @@ blueprint = Blueprint(
 
 
 @blueprint.route("/organisms/<int:id_organism>", methods=["GET"])
+@permissions.check_cruved_scope("R", module_code="MAPPING_GEONATURE", get_scope=False)
 def get_organism(id_organism):
     organism = db.session.get(Organism, id_organism)
     if not organism:
         raise BadRequest(f"Organism with id {id_organism} not found !")
 
-    return OrganismSchema(as_geojson=True).dumps(organism)
+    return OrganismSchema(as_geojson=True, only=["+cruved"]).dumps(organism)
 
 
 @blueprint.route("/organisms", methods=["GET"])
+@permissions.check_cruved_scope("R", module_code="MAPPING_GEONATURE", get_scope=False)
 def get_organisms():
-    organisms = DB.session.scalars(sa.select(Organism)).all()
-    return OrganismSchema(many=True, as_geojson=True).dumps(organisms)
+    organisms = DB.session.scalars(
+        sa.select(Organism).options(joinedload(Organism.type_))
+    ).all()
+    return OrganismSchema(many=True, as_geojson=True, only=["+cruved", "type_"]).dumps(
+        organisms
+    )
 
 
 @blueprint.route("/type_organism/<int:id_type>", methods=["GET"])
+@permissions.check_cruved_scope("R", module_code="MAPPING_GEONATURE", get_scope=False)
 def get_type_organism(id_type):
     type_organism = db.session.get(BibTypeOrganism, id_type)
     if not type_organism:
@@ -43,6 +51,7 @@ def get_type_organism(id_type):
 
 
 @blueprint.route("/organisms", methods=["POST"])
+@permissions.check_cruved_scope("C", module_code="MAPPING_GEONATURE", get_scope=False)
 def create_organism():
     data = request.get_json()
     try:
@@ -55,6 +64,7 @@ def create_organism():
 
 
 @blueprint.route("/organisms/<int:id_organism>", methods=["PUT"])
+@permissions.check_cruved_scope("U", module_code="MAPPING_GEONATURE", get_scope=False)
 def update_organism(id_organism):
     data = request.get_json()
     organism = DB.session.get(Organism, id_organism)
@@ -64,6 +74,7 @@ def update_organism(id_organism):
 
 
 @blueprint.route("/organisms/<int:id_organism>", methods=["DELETE"])
+@permissions.check_cruved_scope("D", module_code="MAPPING_GEONATURE", get_scope=False)
 def delete_organism(id_organism):
     q = sa.delete(Organism).where(Organism.id_organism == id_organism)
     db.session.execute(q)
