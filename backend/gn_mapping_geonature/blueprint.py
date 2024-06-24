@@ -65,7 +65,7 @@ def update_organism(id_organism):
 
 @blueprint.route("/organisms/<int:id_organism>", methods=["DELETE"])
 def delete_organism(id_organism):
-    q = DB.session.query(Organism).filter_by(id_organism=id_organism)
-    q.delete()
+    q = sa.delete(Organism).where(Organism.id_organism == id_organism)
+    db.session.execute(q)
     DB.session.commit()
     return "OK"
