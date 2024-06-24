@@ -1,1 +1,77 @@
-<p>organism-list-map works!</p>
+<div class="row">
+  <div class="col-6">
+    <pnx-map height="87vh">
+      <pnx-geojson
+        [geojson]="organismes"
+        [zoomOnFirstTime]="true"
+      ></pnx-geojson>
+    </pnx-map>
+  </div>
+
+  <div class="col-6 card border-primary bg-light">
+    <h3>Liste des organismes</h3>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Nom</th>
+          <th scope="col">Type</th>
+          <th scope="col">Addresse</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let organisme of organismes.features; index as i">
+          <td scope="row">{{ i + 1 }}</td>
+          <td>
+            {{ organisme['properties'].nom }}
+          </td>
+          <td>{{ organisme.properties?.type_.nom_type }}</td>
+          <td>{{ organisme.properties.adresse }}</td>
+          <td>
+            <button
+              class="btn btn-outline-shadow btn-no-padding btn-ghost"
+              [routerLink]="['info', organisme.properties.id_organism]"
+              [disabled]="!organisme.properties.cruved.R"
+            >
+              <i
+                class="fa fa-info-circle"
+                aria-hidden="true"
+              ></i>
+            </button>
+            <button
+              class="btn btn-outline-shadow btn-no-padding btn-ghost"
+              [routerLink]="['edit', organisme.properties.id_organism]"
+              [disabled]="!organisme.properties.cruved.U"
+            >
+              <i
+                class="fa fa-pencil-square-o"
+                aria-hidden="true"
+              ></i>
+            </button>
+            <button
+              class="btn btn-outline-shadow btn-no-padding btn-ghost"
+              (click)="openDeleteModal(row, deleteModal)"
+              [disabled]="!organisme.properties.cruved.D"
+            >
+              <i
+                class="fa fa-trash-o"
+                aria-hidden="true"
+              ></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<ng-template
+  #deleteModal
+  let-c="close"
+>
+  <pnx-mapping-geonature-delete
+    [c]="c"
+    [idOrganism]="deleteOne?.id_organism"
+  ></pnx-mapping-geonature-delete>
+</ng-template>
