@@ -16,6 +16,7 @@ from utils_flask_sqla_geo.serializers import geoserializable
 from geonature.utils.env import DB, db
 
 
+@serializable
 class BibTypeOrganism(DB.Model):
     __tablename__ = "bib_type_organism"
     __table_args__ = {"schema": "gn_mapping_geonature"}
@@ -24,7 +25,7 @@ class BibTypeOrganism(DB.Model):
 
 
 @serializable
-@geoserializable
+@geoserializable(geoCol="geometry")
 class Organism(DB.Model):
     __tablename__ = "t_organism"
     __table_args__ = {"schema": "gn_mapping_geonature"}
