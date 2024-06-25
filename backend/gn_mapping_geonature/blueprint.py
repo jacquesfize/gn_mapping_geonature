@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, current_app
 from werkzeug.exceptions import BadRequest
 from utils_flask_sqla.response import json_resp
 from geonature.utils.env import DB, db
@@ -11,6 +11,9 @@ from geonature.core.gn_permissions.tools import _get_user_permissions
 from .models import BibTypeOrganism, Organism
 from gn_mapping_geonature.schema import OrganismSchema
 from marshmallow.exceptions import ValidationError
+
+from .admin import *
+
 
 blueprint = Blueprint(
     "mapping_geonature", __name__

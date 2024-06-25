@@ -23,6 +23,9 @@ class BibTypeOrganism(DB.Model):
     id_type = DB.Column(DB.Integer, primary_key=True)
     nom_type = DB.Column(DB.String, nullable=False)
 
+    def __repr__(self):
+        return f"{self.nom_type}"
+
 
 @serializable
 @geoserializable(geoCol="geometry")
