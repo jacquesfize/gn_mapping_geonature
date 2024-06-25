@@ -82,7 +82,7 @@
             </button>
             <button
               class="btn btn-outline-shadow btn-no-padding btn-ghost"
-              (click)="openDeleteModal(row, deleteModal)"
+              (click)="openDeleteModal(organisme.properties.id_organism, deleteModal)"
               [disabled]="!organisme.properties.cruved.D"
             >
               <i
@@ -103,6 +103,6 @@
 >
   <pnx-mapping-geonature-delete
     [c]="c"
-    [idOrganism]="deleteOne?.id_organism"
+    [idOrganism]="deleteIdOrganism"
   ></pnx-mapping-geonature-delete>
 </ng-template>

@@ -12,13 +12,13 @@
           [coordinates]="markerCoordinates"
           zoomLevel="5"
           [defaultEnable]="false"
+          (markerChanged)="patchGeoValue($event)"
         ></pnx-marker>
-        <!-- (markerChanged)="occHabForm.patchGeoValue($event)" -->
       </pnx-map>
     </div>
     <div class="col-6 card border-primary bg-light">
       <div>
-        <form>
+        <form (ngSubmit)="submit()">
           <div class="form-group">
             <label for="OrganismName">Nom</label>
             <input
@@ -27,6 +27,16 @@
               class="form-control"
               id="OrganismName"
               placeholder="Nom"
+            />
+          </div>
+          <div class="form-group">
+            <label for="OrganismAddress">Adresse</label>
+            <input
+              [formControl]="organismForm.get('adresse')"
+              type="text"
+              class="form-control"
+              id="OrganismAddress"
+              placeholder="Adresse"
             />
           </div>
           <div class="form-group">
@@ -39,11 +49,29 @@
               placeholder="Description"
             />
           </div>
+          <div class="form-group">
+            <label for="OrganismUrl">Description</label>
+            <input
+              [formControl]="organismForm.get('url')"
+              type="text"
+              class="form-control"
+              id="OrganismUrl"
+              placeholder="Url"
+            />
+          </div>
           <button
+            *ngIf="!isEdit"
             type="submit"
             class="btn btn-primary"
           >
-            Submit
+            Ajouter
+          </button>
+          <button
+            *ngIf="isEdit"
+            type="submit"
+            class="btn btn-primary"
+          >
+            Editer
           </button>
         </form>
       </div>

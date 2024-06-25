@@ -10,17 +10,16 @@ import { Organism, OrganismFeatureCollection } from '../models/organism';
 })
 export class OrganismListMapComponent {
   public organismes: OrganismFeatureCollection;
-  public deletedOne: Organism;
+  public deleteIdOrganism: Organism;
 
   constructor(private _organismeStoreService: OrganismStoreService, private _ngbModal: NgbModal) {
     this._organismeStoreService.getOrganisms().subscribe((organismes) => {
       this.organismes = organismes;
-      console.log(this.organismes);
     });
   }
 
-  openDeleteModal(organism, deleteModal) {
-    this.deletedOne = organism;
+  openDeleteModal(id_organism, deleteModal) {
+    this.deleteIdOrganism = id_organism;
     this._ngbModal.open(deleteModal);
   }
 }

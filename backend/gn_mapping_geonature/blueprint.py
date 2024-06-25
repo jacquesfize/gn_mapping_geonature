@@ -11,8 +11,10 @@ from geonature.core.gn_permissions.tools import _get_user_permissions
 from .models import BibTypeOrganism, Organism
 from gn_mapping_geonature.schema import OrganismSchema
 from marshmallow.exceptions import ValidationError
-
+import geojson
+from shapely.geometry import shape
 from .admin import *
+import json
 
 
 blueprint = Blueprint(
@@ -56,14 +58,17 @@ def get_type_organism(id_type):
 @blueprint.route("/organisms", methods=["POST"])
 @permissions.check_cruved_scope("C", module_code="MAPPING_GEONATURE", get_scope=False)
 def create_organism():
-    data = request.get_json()
+    data = request.json
+    print(data["geometry"])
+    geom = geojson.loads(json.dumps(data["geometry"]))
+    data["geometry"] = shape(geom).wkt
     try:
-        new_organism = OrganismSchema().load(**data)
+        new_organism = Organism(**data)
     except ValidationError as e:
         raise BadRequest(str(e))
     DB.session.add(new_organism)
     DB.session.commit()
-    return "OK"
+    return {}
 
 
 @blueprint.route("/organisms/<int:id_organism>", methods=["PUT"])
@@ -71,9 +76,10 @@ def create_organism():
 def update_organism(id_organism):
     data = request.get_json()
     organism = DB.session.get(Organism, id_organism)
-    organism.update(data)
-    DB.session.commit()
-    return "OK"
+    organism = OrganismSchema().load(request.json, instance=organism)
+    db.session.add(organism)
+    db.session.commit()
+    return OrganismSchema().dumps(organism)
 
 
 @blueprint.route("/organisms/<int:id_organism>", methods=["DELETE"])
@@ -82,4 +88,4 @@ def delete_organism(id_organism):
     q = sa.delete(Organism).where(Organism.id_organism == id_organism)
     db.session.execute(q)
     DB.session.commit()
-    return "OK"
+    return {}

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Organism } from '../models/organism';
 import { OrganismStoreService } from '../data.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfigService } from '@geonature/services/config.service';
 import {
@@ -32,14 +32,16 @@ export class OrganismMapFormComponent {
     private _route: ActivatedRoute,
     private _ngbModal: NgbModal,
     private _fb: UntypedFormBuilder,
-    public config: ConfigService
+    public config: ConfigService,
+    private _router: Router
   ) {
     this.initOrganismForm();
     this._route.data.subscribe(({ organism }) => {
       if (organism) {
-        this.id_organism = organism.id_organism;
+        this.id_organism = organism.properties.id_organism;
         this.isEdit = true;
-        this.organismForm.patchValue(organism);
+        this.organismForm.patchValue(organism.properties);
+        this.markerCoordinates = organism.geometry.coordinates;
         this.patchGeoValue(organism.geometry);
       }
     });
@@ -47,14 +49,18 @@ export class OrganismMapFormComponent {
 
   submit() {
     if (this.isEdit) {
-      this.dataService.updateOrganism(this.organismForm.value, this.id_organism);
+      this.dataService.updateOrganism(this.organismForm.value, this.id_organism).subscribe(() => {
+        this._router.navigate(['/mapping_geonature']);
+      });
     } else {
-      this.dataService.createOrganism(this.organismForm.value);
+      this.dataService.createOrganism(this.organismForm.value).subscribe(() => {
+        this._router.navigate(['/mapping_geonature']);
+      });
     }
   }
 
   patchGeoValue(geom) {
-    this.organismForm.patchValue({ geom_4326: geom.geometry });
+    this.organismForm.patchValue({ geometry: geom.geometry });
   }
 
   initOrganismForm() {
@@ -64,7 +70,9 @@ export class OrganismMapFormComponent {
       adresse: [null, Validators.required],
       description: [null, Validators.required],
       url: [null, Validators.required],
-      type: [null, Validators.required],
+      geometry: [null, Validators.required],
+      // type: [null, Validators.required],
+      id_type: 1,
     });
 
     this.organismForm = organismForm;

@@ -25,7 +25,7 @@ export class ModalDeleteOrganism implements OnInit {
       (d) => {
         this._commonService.regularToaster('success', 'Organisme supprimé avec succès');
 
-        this._router.navigate(['/organisms']);
+        this._router.navigate(['/mapping_geonature']);
       },
       () => {
         this.c();
