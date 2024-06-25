@@ -1,1 +1,61 @@
-<p>organism-map-form works!</p>
+<div>
+  <!-- data-qa="pnx-occhab-form" -->
+  <!--END  HABITAT ALREADY SAVED -->
+
+  <div class="row">
+    <div class="col-6">
+      <pnx-map
+        height="87vh"
+        [geolocation]="true"
+      >
+        <pnx-marker
+          [coordinates]="markerCoordinates"
+          zoomLevel="5"
+          [defaultEnable]="false"
+        ></pnx-marker>
+        <!-- (markerChanged)="occHabForm.patchGeoValue($event)" -->
+      </pnx-map>
+    </div>
+    <div class="col-6 card border-primary bg-light">
+      <div>
+        <form>
+          <div class="form-group">
+            <label for="OrganismName">Nom</label>
+            <input
+              [formControl]="organismForm.get('nom')"
+              type="text"
+              class="form-control"
+              id="OrganismName"
+              placeholder="Nom"
+            />
+          </div>
+          <div class="form-group">
+            <label for="OrganismDescription">Description</label>
+            <input
+              [formControl]="organismForm.get('description')"
+              type="text"
+              class="form-control"
+              id="OrganismDescription"
+              placeholder="Description"
+            />
+          </div>
+          <button
+            type="submit"
+            class="btn btn-primary"
+          >
+            Submit
+          </button>
+        </form>
+      </div>
+      <!-- <pnx-dumb-select
+            *ngIf="config.OCCHAB.formConfig['exposure']"
+            label="Exposition"
+            [parentFormControl]="occHabForm.stationForm.get('id_nomenclature_exposure')"
+            [items]="storeService.nomenclatureItems.EXPOSITION"
+            comparedKey="id_nomenclature"
+            titleKey="definition_fr"
+            displayedKey="label_fr"
+          ></pnx-dumb-select> -->
+    </div>
+  </div>
+</div>

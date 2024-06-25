@@ -12,6 +12,7 @@ import { ModalDeleteOrganism } from './delete-modal/delete-modal.component';
 // my module routing
 const routes: Routes = [
   { path: '', component: OrganismListMapComponent },
+  { path: 'add', component: OrganismMapFormComponent },
   {
     path: 'edit/:id_organism',
     component: OrganismMapFormComponent,
