@@ -4,7 +4,9 @@ from .models import Organism
 from geonature.utils.env import db
 from flask import current_app as app
 
-print(app.config["DEFAULT_CENTER_LAT"])
+app.config["MAPBOX_MAP_ID"] = "example.abc123"
+app.config["DEFAULT_CENTER_LAT"] = 0.2
+app.config["DEFAULT_CENTER_LONG"] = 0.2
 
 
 class OrganismView(ModelView):
