@@ -52,7 +52,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let organisme of organismes.features; index as i">
+        <tr *ngFor="let organisme of organismes?.features; index as i">
           <td scope="row">{{ i + 1 }}</td>
           <td>
             {{ organisme['properties'].nom }}
