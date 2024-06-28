@@ -1,0 +1,63 @@
+<div class="row">
+  <div class="col-6">
+    <pnx-map height="87vh">
+      <pnx-geojson
+        [geojson]="organism"
+        [zoomOnFirstTime]="true"
+      ></pnx-geojson>
+    </pnx-map>
+  </div>
+
+  <div class="col-6 card border-primary bg-light">
+    <button
+      matTooltip="Editez les infos de l'organisme {{ organism_info?.id }}"
+      mat-mini-fab
+      class="button-success float-right"
+      type="button"
+      [disabled]="organism_info.cruved.U == false"
+      [routerLink]="['/mapping_geonature/edit', organism_info?.id_organism]"
+    >
+      <mat-icon>edit</mat-icon>
+    </button>
+
+    <button
+      matTooltip="Supprimer l'organisme {{ organism_info?.id_organism }}"
+      mat-mini-fab
+      color="warn"
+      type="button"
+      (click)="openDeleteModal(deleteModal)"
+      class="float-right mr-1"
+      [disabled]="organism_info?.cruved.D == false"
+    >
+      <mat-icon>delete</mat-icon>
+    </button>
+
+    <h3>{{ organism_info.nom }}</h3>
+    <p>
+      <b class="text-muted">Description :</b>
+      {{ organism_info.description }}
+    </p>
+    <p>
+      <b class="text-muted">Adresse :</b>
+      {{ organism_info.adresse }}
+    </p>
+    <p>
+      <b class="text-muted">Type :</b>
+      {{ organism_info.type }}
+    </p>
+    <p>
+      <b class="text-muted">Url :</b>
+      {{ organism_info.url }}
+    </p>
+  </div>
+</div>
+
+<ng-template
+  #deleteModal
+  let-c="close"
+>
+  <pnx-mapping-geonature-delete
+    [c]="c"
+    [idOrganism]="organism?.id_organism"
+  ></pnx-mapping-geonature-delete>
+</ng-template>

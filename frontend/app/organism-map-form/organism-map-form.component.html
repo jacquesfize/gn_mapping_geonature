@@ -1,0 +1,89 @@
+<div>
+  <!-- data-qa="pnx-occhab-form" -->
+  <!--END  HABITAT ALREADY SAVED -->
+
+  <div class="row">
+    <div class="col-6">
+      <pnx-map
+        height="87vh"
+        [geolocation]="true"
+      >
+        <pnx-marker
+          [coordinates]="markerCoordinates"
+          zoomLevel="5"
+          [defaultEnable]="false"
+          (markerChanged)="patchGeoValue($event)"
+        ></pnx-marker>
+      </pnx-map>
+    </div>
+    <div class="col-6 card border-primary bg-light">
+      <div>
+        <form (ngSubmit)="submit()">
+          <div class="form-group">
+            <label for="OrganismName">Nom</label>
+            <input
+              [formControl]="organismForm.get('nom')"
+              type="text"
+              class="form-control"
+              id="OrganismName"
+              placeholder="Nom"
+            />
+          </div>
+          <div class="form-group">
+            <label for="OrganismAddress">Adresse</label>
+            <input
+              [formControl]="organismForm.get('adresse')"
+              type="text"
+              class="form-control"
+              id="OrganismAddress"
+              placeholder="Adresse"
+            />
+          </div>
+          <div class="form-group">
+            <label for="OrganismDescription">Description</label>
+            <input
+              [formControl]="organismForm.get('description')"
+              type="text"
+              class="form-control"
+              id="OrganismDescription"
+              placeholder="Description"
+            />
+          </div>
+          <div class="form-group">
+            <label for="OrganismUrl">Url</label>
+            <input
+              [formControl]="organismForm.get('url')"
+              type="text"
+              class="form-control"
+              id="OrganismUrl"
+              placeholder="Url"
+            />
+          </div>
+          <button
+            *ngIf="!isEdit"
+            type="submit"
+            class="btn btn-primary"
+          >
+            Ajouter
+          </button>
+          <button
+            *ngIf="isEdit"
+            type="submit"
+            class="btn btn-primary"
+          >
+            Editer
+          </button>
+        </form>
+      </div>
+      <!-- <pnx-dumb-select
+            *ngIf="config.OCCHAB.formConfig['exposure']"
+            label="Exposition"
+            [parentFormControl]="occHabForm.stationForm.get('id_nomenclature_exposure')"
+            [items]="storeService.nomenclatureItems.EXPOSITION"
+            comparedKey="id_nomenclature"
+            titleKey="definition_fr"
+            displayedKey="label_fr"
+          ></pnx-dumb-select> -->
+    </div>
+  </div>
+</div>
